@@ -64,7 +64,7 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
     public function getSubProtocols()
     {
         if ($this->_decorating instanceof WsServerInterface) {
-            $subs = $this->_decorating->getSubProtocols();
+            $subs   = $this->_decorating->getSubProtocols();
             $subs[] = 'wamp';
             $subs[] = 'wamp.2.json';
 
@@ -106,11 +106,11 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
         switch ($json[0]) {
             case static::MSG_PREFIX:
                 $from->WAMP->prefixes[$json[1]] = $json[2];
-            break;
+                break;
 
             case static::MSG_CALL:
                 array_shift($json);
-                $callID = array_shift($json);
+                $callID  = array_shift($json);
                 $procURI = array_shift($json);
 
                 if (count($json) == 1 && is_array($json[0])) {
@@ -118,30 +118,30 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
                 }
 
                 $this->_decorating->onCall($from, $callID, $from->getUri($procURI), $json);
-            break;
+                break;
 
             case static::MSG_SUBSCRIBE:
                 $this->_decorating->onSubscribe($from, $from->getUri($json[3]), $json[1]);
-            break;
+                break;
 
             case static::MSG_UNSUBSCRIBE:
                 $this->_decorating->onUnSubscribe($from, $from->getUri($json[3]));
-            break;
+                break;
 
             case static::MSG_PUBLISH:
                 $exclude = (array_key_exists(2, $json) ? $json[2] : null);
                 if (!is_array($exclude)) {
-                    if (true === (boolean) $exclude) {
+                    if (true === (boolean)$exclude) {
                         $exclude = array($from->WAMP->sessionId);
                     } else {
                         $exclude = array();
                     }
                 }
 
-                $eligible = (array_key_exists(5, $json) ? $json[5] : array());
+                $eligible = (array_key_exists(6, $json) ? $json[6] : array());
 
-                $this->_decorating->onPublish($from, $from->getUri($json[3]), $json[4], $exclude, $eligible);
-            break;
+                $this->_decorating->onPublish($from, $from->getUri($json[3]), ['args' => $json[4], 'kwargs' => $json[5]], $exclude, $eligible);
+                break;
 
             default:
                 throw new Exception('Invalid WAMP message type');
