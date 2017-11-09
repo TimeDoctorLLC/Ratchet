@@ -28,15 +28,16 @@ use Ratchet\WebSocket\WsServerInterface;
  */
 class ServerProtocol implements MessageComponentInterface, WsServerInterface
 {
-    const MSG_WELCOME = 0;
+    const MSG_WELCOME = 2;
     const MSG_PREFIX = 1;
-    const MSG_CALL = 2;
-    const MSG_CALL_RESULT = 3;
-    const MSG_CALL_ERROR = 4;
-    const MSG_SUBSCRIBE = 5;
-    const MSG_UNSUBSCRIBE = 6;
-    const MSG_PUBLISH = 7;
-    const MSG_EVENT = 8;
+    const MSG_CALL = 48;
+    const MSG_CALL_RESULT = 50;
+    const MSG_CALL_ERROR = 8;
+    const MSG_SUBSCRIBE = 32;
+    const MSG_UNSUBSCRIBE = 34;
+    const MSG_PUBLISH = 16;
+    const MSG_EVENT = 36;
+    const MSG_SUBSCRIBED = 33;
 
     /**
      * @var WampServerInterface
