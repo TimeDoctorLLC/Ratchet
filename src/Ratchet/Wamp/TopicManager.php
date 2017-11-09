@@ -45,7 +45,7 @@ class TopicManager implements WsServerInterface, WampServerInterface
     /**
      * {@inheritdoc}
      */
-    public function onSubscribe(ConnectionInterface $conn, $topic)
+    public function onSubscribe(ConnectionInterface $conn, $topic, $request)
     {
         $topicObj = $this->getTopic($topic);
 
