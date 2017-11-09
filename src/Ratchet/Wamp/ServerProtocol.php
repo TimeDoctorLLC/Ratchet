@@ -66,6 +66,7 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
         if ($this->_decorating instanceof WsServerInterface) {
             $subs = $this->_decorating->getSubProtocols();
             $subs[] = 'wamp';
+            $subs[] = 'wamp.2.json';
 
             return $subs;
         } else {
