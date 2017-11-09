@@ -21,9 +21,9 @@ class WampConnection extends AbstractConnectionDecorator
     {
         parent::__construct($conn);
 
-        $this->WAMP = new \StdClass();
+        $this->WAMP            = new \StdClass();
         $this->WAMP->sessionId = str_replace('.', '', uniqid(mt_rand(), true));
-        $this->WAMP->prefixes = array();
+        $this->WAMP->prefixes  = array();
 
         $this->send(json_encode(array(WAMP::MSG_WELCOME, $this->WAMP->sessionId, ['roles' => true], \Ratchet\VERSION)));
     }
@@ -54,7 +54,7 @@ class WampConnection extends AbstractConnectionDecorator
     public function callError($id, $errorUri, $desc = '', $details = null)
     {
         if ($errorUri instanceof Topic) {
-            $errorUri = (string) $errorUri;
+            $errorUri = (string)$errorUri;
         }
 
         $data = array(WAMP::MSG_CALL_ERROR, $id, $errorUri, $desc);
@@ -67,21 +67,24 @@ class WampConnection extends AbstractConnectionDecorator
     }
 
     /**
-     * @param string $topic The topic to broadcast to
-     * @param mixed  $msg   Data to send with the event.  Anything that is json'able
+     * @param string $topic  The topic to broadcast to
+     * @param mixed  $args   Data to send with the event.  Anything that is json'able
+     * @param mixed  $kwargs Data to send with the event.  Anything that is json'able
      *
      * @return WampConnection
      */
-    public function event($topic, $msg)
+    public function event($topic, $args, $kwargs = [])
     {
-        $details = [
+        $publication = [];
+        $details     = [
             'topic'              => $topic,
             'publisher'          => '',
             'publisher_authid'   => '',
             'publisher_authrole' => '',
             'retained'           => ''
         ];
-        return $this->send(json_encode(array(WAMP::MSG_EVENT, (string) $topic, $msg, $details, $msg)));
+
+        return $this->send(json_encode(array(WAMP::MSG_EVENT, (string)$topic, $publication, $details, $args, $kwargs)));
     }
 
     /**
@@ -92,9 +95,9 @@ class WampConnection extends AbstractConnectionDecorator
      */
     public function prefix($curie, $uri)
     {
-        $this->WAMP->prefixes[$curie] = (string) $uri;
+        $this->WAMP->prefixes[$curie] = (string)$uri;
 
-        return $this->send(json_encode(array(WAMP::MSG_PREFIX, $curie, (string) $uri)));
+        return $this->send(json_encode(array(WAMP::MSG_PREFIX, $curie, (string)$uri)));
     }
 
     /**
@@ -107,14 +110,14 @@ class WampConnection extends AbstractConnectionDecorator
     public function getUri($uri)
     {
         $curieSeperator = ':';
-        $fullSeperator = '#';
+        $fullSeperator  = '#';
 
         if (preg_match('/http(s*)\:\/\//', $uri) == false) {
             if (strpos($uri, $curieSeperator) !== false) {
                 list($prefix, $action) = explode($curieSeperator, $uri);
                 $expandedPrefix = isset($this->WAMP->prefixes[$prefix]) ? $this->WAMP->prefixes[$prefix] : $prefix;
 
-                return $expandedPrefix . $fullSeperator . $action;
+                return $expandedPrefix.$fullSeperator.$action;
             }
         }
 

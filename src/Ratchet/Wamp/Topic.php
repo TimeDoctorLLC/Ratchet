@@ -27,7 +27,7 @@ class Topic implements \IteratorAggregate, \Countable
      */
     public function __construct($topicId)
     {
-        $this->id = $topicId;
+        $this->id          = $topicId;
         $this->subscribers = new \SplObjectStorage();
     }
 
@@ -47,16 +47,17 @@ class Topic implements \IteratorAggregate, \Countable
     /**
      * Send a message to all the connections in this topic.
      *
-     * @param string $msg      Payload to publish
-     * @param array  $exclude  A list of session IDs the message should be excluded from (blacklist)
-     * @param array  $eligible A list of session Ids the message should be send to (whitelist)
+     * @param array $args     Payload to publish
+     * @param array $kwargs   Payload to publish
+     * @param array $exclude  A list of session IDs the message should be excluded from (blacklist)
+     * @param array $eligible A list of session Ids the message should be send to (whitelist)
      *
      * @return Topic The same Topic object to chain
      */
-    public function broadcast($msg, array $exclude = array(), array $eligible = array())
+    public function broadcast($args, $kwargs, array $exclude = array(), array $eligible = array())
     {
-        $useEligible = (bool) count($eligible);
-        foreach ($this->subscribers as $client) {
+        $useEligible = (bool)count($eligible);
+        foreach ($this->subscribers as $client/* @var $client WampConnection */) {
             if (in_array($client->WAMP->sessionId, $exclude)) {
                 continue;
             }
@@ -65,7 +66,7 @@ class Topic implements \IteratorAggregate, \Countable
                 continue;
             }
 
-            $client->event($this->id, $msg);
+            $client->event($this->id, $args, $kwargs);
         }
 
         return $this;
