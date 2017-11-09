@@ -1,7 +1,7 @@
 {
-    "name": "oshanrube/ratchet"
+    "name": "gos/ratchet"
   , "type": "library"
-  , "description": "PHP WebSocket library, extended version of gos/ratchet"
+  , "description": "PHP WebSocket library"
   , "keywords": ["WebSockets", "Server", "Ratchet", "Sockets"]
   , "homepage": "http://socketo.me"
   , "license": "MIT"
