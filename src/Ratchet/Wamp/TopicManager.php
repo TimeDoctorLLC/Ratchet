@@ -55,7 +55,16 @@ class TopicManager implements WsServerInterface, WampServerInterface
 
         $this->topicLookup[$topic]->add($conn);
         $conn->WAMP->subscriptions->attach($topicObj);
-        $this->app->onSubscribe($conn, $topicObj);
+        // send subscribed response
+        $details = [
+            'topic'              => $topic,
+            'publisher'          => '',
+            'publisher_authid'   => '',
+            'publisher_authrole' => '',
+            'retained'           => ''
+        ];
+        $conn->send(json_encode(array(ServerProtocol::MSG_SUBSCRIBED, $request, $topic, $details)));
+        $this->app->onSubscribe($conn, $topicObj, $request);
     }
 
     /**
