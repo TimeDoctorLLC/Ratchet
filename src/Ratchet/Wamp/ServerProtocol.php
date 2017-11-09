@@ -121,15 +121,15 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
             break;
 
             case static::MSG_SUBSCRIBE:
-                $this->_decorating->onSubscribe($from, $from->getUri($json[1]));
+                $this->_decorating->onSubscribe($from, $from->getUri($json[3]), $json[1]);
             break;
 
             case static::MSG_UNSUBSCRIBE:
-                $this->_decorating->onUnSubscribe($from, $from->getUri($json[1]));
+                $this->_decorating->onUnSubscribe($from, $from->getUri($json[3]));
             break;
 
             case static::MSG_PUBLISH:
-                $exclude = (array_key_exists(3, $json) ? $json[3] : null);
+                $exclude = (array_key_exists(2, $json) ? $json[2] : null);
                 if (!is_array($exclude)) {
                     if (true === (boolean) $exclude) {
                         $exclude = array($from->WAMP->sessionId);
@@ -138,9 +138,9 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
                     }
                 }
 
-                $eligible = (array_key_exists(4, $json) ? $json[4] : array());
+                $eligible = (array_key_exists(5, $json) ? $json[5] : array());
 
-                $this->_decorating->onPublish($from, $from->getUri($json[1]), $json[2], $exclude, $eligible);
+                $this->_decorating->onPublish($from, $from->getUri($json[3]), $json[4], $exclude, $eligible);
             break;
 
             default:
