@@ -54,7 +54,7 @@ class Topic implements \IteratorAggregate, \Countable
      *
      * @return Topic The same Topic object to chain
      */
-    public function broadcast($args, $kwargs, array $exclude = array(), array $eligible = array())
+    public function broadcast($args, $kwargs = array(), array $exclude = array(), array $eligible = array())
     {
         $useEligible = (bool)count($eligible);
         foreach ($this->subscribers as $client/* @var $client WampConnection */) {
