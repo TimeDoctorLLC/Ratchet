@@ -18,9 +18,20 @@ class Topic implements \IteratorAggregate, \Countable
      */
     public $autoDelete = false;
 
+    /**
+     * @var string
+     */
     private $id;
 
+    /**
+     * @var \SplObjectStorage
+     */
     private $subscribers;
+
+    /**
+     * @var array
+     */
+    private $options;
 
     /**
      * @param string $topicId Unique ID for this object
@@ -34,14 +45,33 @@ class Topic implements \IteratorAggregate, \Countable
     /**
      * @return string
      */
+    public function __toString()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * @return string
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function __toString()
+    /**
+     * @return array
+     */
+    public function getOptions()
     {
-        return $this->getId();
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
     }
 
     /**
