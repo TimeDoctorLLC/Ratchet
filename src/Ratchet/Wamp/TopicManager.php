@@ -45,7 +45,7 @@ class TopicManager implements WsServerInterface, WampServerInterface
     /**
      * {@inheritdoc}
      */
-    public function onSubscribe(ConnectionInterface $conn, $topic, $request)
+    public function onSubscribe(ConnectionInterface $conn, $topic, $request, $options)
     {
         $topicObj = $this->getTopic($topic);
 
@@ -64,7 +64,7 @@ class TopicManager implements WsServerInterface, WampServerInterface
             'retained'           => ''
         ];
         $conn->send(json_encode(array(ServerProtocol::MSG_SUBSCRIBED, $request, $topic, $details)));
-        $this->app->onSubscribe($conn, $topicObj, $request);
+        $this->app->onSubscribe($conn, $topicObj, $request, $options);
     }
 
     /**

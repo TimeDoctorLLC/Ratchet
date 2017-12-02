@@ -121,7 +121,7 @@ class ServerProtocol implements MessageComponentInterface, WsServerInterface
                 break;
 
             case static::MSG_SUBSCRIBE:
-                $this->_decorating->onSubscribe($from, $from->getUri($json[3]), $json[1]);
+                $this->_decorating->onSubscribe($from, $from->getUri($json[3]), $json[1], $json[2]);
                 break;
 
             case static::MSG_UNSUBSCRIBE:

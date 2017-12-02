@@ -27,8 +27,9 @@ interface WampServerInterface extends ComponentInterface
      * @param \Ratchet\ConnectionInterface $conn
      * @param string|Topic                 $topic The topic to subscribe to
      * @param string                       $request the request id from the serializer
+     * @param array $options additional params
      */
-    public function onSubscribe(ConnectionInterface $conn, $topic, $request);
+    public function onSubscribe(ConnectionInterface $conn, $topic, $request, $options);
 
     /**
      * A request to unsubscribe from a topic has been made.
