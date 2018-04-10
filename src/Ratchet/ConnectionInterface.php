@@ -7,7 +7,7 @@ namespace Ratchet;
  *
  * @var string
  */
-const VERSION = 'Ratchet/0.3.3';
+const VERSION = 'Ratchet/0.4.1';
 
 /**
  * A proxy object representing a connection to the application

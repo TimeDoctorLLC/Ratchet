@@ -37,4 +37,11 @@ class PhpHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($expected, $this->_handler->unserialize($in));
     }
+
+    /**
+     * @dataProvider serializedProvider
+     */
+    public function testSerialize($serialized, $original) {
+        $this->assertEquals($serialized, $this->_handler->serialize($original));
+    }
 }
