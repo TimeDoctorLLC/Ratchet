@@ -42,4 +42,12 @@ class WsConnection extends AbstractConnectionDecorator {
 
         $this->WebSocket->closing = true;
     }
+
+    /**
+     * @return ConnectionInterface
+     */
+    public function getConnection()
+    {
+        return parent::getConnection();
+    }
 }

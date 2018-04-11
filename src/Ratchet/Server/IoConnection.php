@@ -2,6 +2,7 @@
 
 namespace Ratchet\Server;
 
+use GuzzleHttp\Psr7\Request;
 use Ratchet\ConnectionInterface;
 use React\Socket\ConnectionInterface as ReactConn;
 
@@ -14,6 +15,11 @@ class IoConnection implements ConnectionInterface
      * @var \React\Socket\ConnectionInterface
      */
     protected $conn;
+
+    /**
+     * @var Request
+     */
+    public $httpRequest;
 
     /**
      * @param \React\Socket\ConnectionInterface $conn
@@ -39,5 +45,21 @@ class IoConnection implements ConnectionInterface
     public function close()
     {
         $this->conn->end();
+    }
+
+    /**
+     * @return Request
+     */
+    public function getHttpRequest()
+    {
+        return $this->httpRequest;
+    }
+
+    /**
+     * @param Request $httpRequest
+     */
+    public function setHttpRequest(Request $httpRequest)
+    {
+        $this->httpRequest = $httpRequest;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Ratchet\Wamp;
-use Ratchet\ConnectionInterface;
 use Ratchet\AbstractConnectionDecorator;
+use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\ServerProtocol as WAMP;
 
 /**
@@ -20,7 +20,7 @@ class WampConnection extends AbstractConnectionDecorator {
         $this->WAMP->sessionId = str_replace('.', '', uniqid(mt_rand(), true));
         $this->WAMP->prefixes  = array();
 
-        $this->send(json_encode(array(WAMP::MSG_WELCOME, $this->WAMP->sessionId, 1, \Ratchet\VERSION)));
+        $this->send(json_encode(array(WAMP::MSG_WELCOME, $this->WAMP->sessionId, ['roles' => true], \Ratchet\VERSION)));
     }
 
     /**
@@ -60,8 +60,34 @@ class WampConnection extends AbstractConnectionDecorator {
      * @param mixed  $msg   Data to send with the event.  Anything that is json'able
      * @return WampConnection
      */
-    public function event($topic, $msg) {
-        return $this->send(json_encode(array(WAMP::MSG_EVENT, (string)$topic, $msg)));
+    public function event($topic, $args, $kwargs = [])
+    {
+        $publication = [];
+        $details     = [
+            'topic'              => $topic,
+            'publisher'          => '',
+            'publisher_authid'   => '',
+            'publisher_authrole' => '',
+            'retained'           => ''
+        ];
+
+        return $this->send(json_encode(array(WAMP::MSG_EVENT, (string)$topic, $publication, $details, $args, $kwargs)));
+    }
+
+    /**
+     * @param $topic
+     */
+    public function subscribed($topic, $request)
+    {
+        $publication = [];
+        $details     = [
+            'topic'              => $topic,
+            'publisher'          => '',
+            'publisher_authid'   => '',
+            'publisher_authrole' => '',
+            'retained'           => ''
+        ];
+        $this->send(json_encode(array(WAMP::MSG_SUBSCRIBED, $request->getRequestId(), (string)$topic, $publication, $details)));
     }
 
     /**
@@ -86,7 +112,7 @@ class WampConnection extends AbstractConnectionDecorator {
         if (preg_match('/http(s*)\:\/\//', $uri) == false) {
             if (strpos($uri, $curieSeperator) !== false) {
                 list($prefix, $action) = explode($curieSeperator, $uri);
-                
+
                 if(isset($this->WAMP->prefixes[$prefix]) === true){
                   return $this->WAMP->prefixes[$prefix] . '#' . $action;
                 }
@@ -112,4 +138,12 @@ class WampConnection extends AbstractConnectionDecorator {
         $this->getConnection()->close($opt);
     }
 
+
+    /**
+     * @return ConnectionInterface
+     */
+    public function getConnection()
+    {
+        return parent::getConnection();
+    }
 }

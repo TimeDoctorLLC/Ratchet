@@ -9,6 +9,10 @@ class Topic implements \IteratorAggregate, \Countable {
     private $id;
 
     private $subscribers;
+    /**
+     * @var array
+     */
+    private $options;
 
     /**
      * @param string $topicId Unique ID for this object
@@ -30,13 +34,30 @@ class Topic implements \IteratorAggregate, \Countable {
     }
 
     /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
+    /**
      * Send a message to all the connections in this topic
      * @param string|array $msg Payload to publish
      * @param array $exclude A list of session IDs the message should be excluded from (blacklist)
      * @param array $eligible A list of session Ids the message should be send to (whitelist)
      * @return Topic The same Topic object to chain
      */
-    public function broadcast($msg, array $exclude = array(), array $eligible = array()) {
+    public function broadcast($msg, $kwargs, array $exclude = array(), array $eligible = array())
+    {
         $useEligible = (bool)count($eligible);
         foreach ($this->subscribers as $client) {
             if (in_array($client->WAMP->sessionId, $exclude)) {
@@ -47,7 +68,7 @@ class Topic implements \IteratorAggregate, \Countable {
                 continue;
             }
 
-            $client->event($this->id, $msg);
+            $client->event($this->id, $msg, $kwargs);
         }
 
         return $this;
