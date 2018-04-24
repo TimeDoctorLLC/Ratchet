@@ -52,17 +52,9 @@ class WampConnection extends AbstractConnectionDecorator
      *
      * @return WampConnection
      */
-    public function callError(WampRequest $request, $errorUri, $desc = '', $details = null)
+    public function callError(WampRequest $request, Topic $topic, $desc = '', $args = [], $kwargs = [])
     {
-        if ($errorUri instanceof Topic) {
-            $errorUri = (string)$errorUri;
-        }
-
-        $data = array(WAMP::MSG_CALL_ERROR, WAMP::MSG_SUBSCRIBE, $request->getRequestId(), [], $desc);
-
-        if (null !== $details) {
-            $data[] = $details;
-        }
+        $data = array(WAMP::MSG_CALL_ERROR, WAMP::MSG_SUBSCRIBE, $request->getRequestId(), [], $desc, $args, $kwargs);
 
         return $this->send(json_encode($data));
     }
