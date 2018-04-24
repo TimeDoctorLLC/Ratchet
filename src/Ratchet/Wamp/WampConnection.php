@@ -2,6 +2,7 @@
 
 namespace Ratchet\Wamp;
 
+use Gos\Bundle\WebSocketBundle\Router\WampRequest;
 use Ratchet\AbstractConnectionDecorator;
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\ServerProtocol as WAMP;
